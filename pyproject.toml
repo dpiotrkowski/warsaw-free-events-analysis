@@ -1,0 +1,15 @@
+[project]
+name = "scrapery-python"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "bs4>=0.0.2",
+    "geopandas>=1.0.1",
+    "matplotlib>=3.10.3",
+    "osmnx>=2.0.3",
+    "pandas>=2.2.3",
+    "requests>=2.32.3",
+    "shapely>=2.1.0",
+]
