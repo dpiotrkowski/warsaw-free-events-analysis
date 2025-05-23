@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events Map</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        form {
+            text-align: center;
+            margin: 20px;
+        }
+        select {
+            padding: 10px;
+            font-size: 16px;
+        }
+        input[type="submit"] {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        #map {
+            height: 400px; /* Adjusted height */
+            margin: 0 auto;
+            max-width: 800px; /* Centered and limited width */
+        }
+        footer {
+            text-align: center;
+            margin: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>Wydarzenia w Warszawie</h1>
+    <form method="POST">
+        <h3>Filtruj według kategorii:</h3>
+        <select name="category">
+            <option value="">Wybierz kategorię</option>
+            {% for category in categories %}
+                <option value="{{ category }}">{{ category }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Filtruj">
+    </form>
+    <div id="map"></div>
+    <footer>
+        <p>Wydarzenia pochodzą z Waw4free</p>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([52.2297, 21.0122], 12); // Centered on Warsaw
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+        
+        // Add markers dynamically
+        var events = {{ filtered_events|safe }};
+        events.forEach(function(event) {
+            if (event.Latitude && event.Longitude) {
+                L.marker([event.Latitude, event.Longitude])
+                    .bindPopup("<strong>" + event.Wydarzenie + "</strong><br>" + event.Data + " " + event.Godzina + "<br>" + event.Miejsce)
+                    .addTo(map);
+            }
+        });
+    </script>
+</body>
+</html>
